@@ -26,5 +26,10 @@ namespace ChinookSystem.Entities
             get { return _Name; }
             set { _Name = string.IsNullOrEmpty(value) ? null : value; }
         }
+
+        //Navigational properties
+        //1 to many relationship
+        //Create the many end of the relationship in this entity
+        public virtual ICollection<Album> Albums { get; set; }//multiple because an artist can have a collection of albums
     }
 }
