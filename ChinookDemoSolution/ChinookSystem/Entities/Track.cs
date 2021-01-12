@@ -26,19 +26,11 @@ namespace ChinookSystem.Entities
         [StringLength(200, ErrorMessage = "Track name is limited to 200 characters.")]
         public string Name { get; set; }
 
-        public int? AlbumId
-        {
-            get { return _AlbumId; }
-            set { _AlbumId = value.HasValue ? value : null; }
-        }
+        public int? AlbumId { get; set; }
 
         public int MediaTypeId { get; set; }
 
-        public int? GenreId
-        {
-            get { return _GenreId; }
-            set { _GenreId = value.HasValue ? value : null; }
-        }
+        public int? GenreId { get; set; }
 
         [StringLength(220, ErrorMessage = "Composer is limited to 220 characters.")]
         public string Composer
@@ -49,14 +41,13 @@ namespace ChinookSystem.Entities
 
         public int Milliseconds { get; set; }
 
-        public int? Bytes
-        {
-            get { return _Bytes; }
-            set { _Bytes = value.HasValue ? value : null; }
-        }
+        public int? Bytes { get; set; }
 
-        public double UnitPrice { get; set; }//numeric on db
+        public decimal UnitPrice { get; set; }//numeric on db
 
+
+        //navigational propeties
+        //child to parent (many to one)
         public virtual Album Album { get; set; }
         public virtual Genre Genre { get; set; }
         public virtual MediaType MediaType { get; set; }
