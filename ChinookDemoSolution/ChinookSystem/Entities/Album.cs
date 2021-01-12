@@ -63,6 +63,6 @@ namespace ChinookSystem.Entities
         public virtual Artist Artist { get; set; }//the first Artist is return datatype (class name), the second is the instance name
         
         //Not valid until the Track entity is coded
-        //public virtual ICollection<Track> Tracks { get; set; }
+        public virtual ICollection<Track> Tracks { get; set; }
     }
 }
