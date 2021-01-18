@@ -25,40 +25,59 @@ namespace WebApp.SamplePages
 
         protected void LoadArtistList()
         {
-            ArtistController sysmgr = new ArtistController();
-            List<SelectionList> info = sysmgr.Artists_DDLList();
+            //User friendly error handling (aka try/catch)
+            //Use the usercontrol MessageUserControl to manage the error handling for the web page 
+            //  when control leaves the web page and goes to the class library
+            MessageUserControl.TryRun(() => {
+                //What goes inside the coding block? -> Your code that would normally be inside the try portion of a try/catch
 
-            //Let's assume the data collection needs to be sorted - this is redundant as it's already been sorted
-            info.Sort((x,y) => x.DisplayField.CompareTo(y.DisplayField)); //DisplayField = Name
+                ArtistController sysmgr = new ArtistController();
+                List<SelectionList> info = sysmgr.Artists_DDLList();
 
-            //Setup the DDL
-            ArtistList.DataSource = info;
-            //ArtistList.DataTextField = "DisplayField";
-            ArtistList.DataTextField = nameof(SelectionList.DisplayField);
-            ArtistList.DataValueField = nameof(SelectionList.ValueField);
-            ArtistList.DataBind();
+                //Let's assume the data collection needs to be sorted - this is redundant as it's already been sorted
+                info.Sort((x, y) => x.DisplayField.CompareTo(y.DisplayField)); //DisplayField = Name
 
-            //Setup of a prompt line
-            ArtistList.Items.Insert(0, new ListItem("select...", "0"));
-            //Everything should be a string
-            //"select..." goes into DisplayField
-            //"0" goes into ValueField
+                //Setup the DDL
+                ArtistList.DataSource = info;
+                //ArtistList.DataTextField = "DisplayField";
+                ArtistList.DataTextField = nameof(SelectionList.DisplayField);
+                ArtistList.DataValueField = nameof(SelectionList.ValueField);
+                ArtistList.DataBind();
+
+                //Setup of a prompt line
+                ArtistList.Items.Insert(0, new ListItem("select...", "0"));
+                //Everything should be a string
+                //"select..." goes into DisplayField
+                //"0" goes into ValueField
+            }, "Success title message", "the success title and body message are optional");
         }
+
+        #region Error Handling Methods for ODS
+        protected void SelectCheckForException(object sender, ObjectDataSourceStatusEventArgs e)
+        {
+            MessageUserControl.HandleDataBoundException(e);
+        }
+        #endregion
 
         protected void SearchAlbums_Click(object sender, EventArgs e)
         {
             if(ArtistList.SelectedIndex == 0) //Am I on the first physical line (prompt line) of the DDL?
             {
-                MessageLabel.Text = "Select an artist for the search.";
+                MessageUserControl.ShowInfo("Search Selection Concern", "Select an artist for the search.");
                 ArtistAlbumList.DataSource = null;
                 ArtistAlbumList.DataBind();
             }
             else
             {
-                AlbumController sysmgr = new AlbumController();
-                List<ChinookSystem.ViewModels.ArtistAlbums> info = sysmgr.Albums_GetAlbumsForArtist(int.Parse(ArtistList.SelectedValue));
-                ArtistAlbumList.DataSource = info;
-                ArtistAlbumList.DataBind();
+                MessageUserControl.TryRun(() =>
+                {
+                    AlbumController sysmgr = new AlbumController();
+                    List<ChinookSystem.ViewModels.ArtistAlbums> info = sysmgr.Albums_GetAlbumsForArtist(int.Parse(ArtistList.SelectedValue));
+                    //Testing if abort had happened
+                    //throw new Exception("This is a test to see an abort from the web page code");
+                    ArtistAlbumList.DataSource = info;
+                    ArtistAlbumList.DataBind();
+                },"Search Results", "The list of albums for the selected artist");
             }
         }
     }
