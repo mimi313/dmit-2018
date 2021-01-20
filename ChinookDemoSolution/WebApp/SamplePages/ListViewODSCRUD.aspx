@@ -22,19 +22,18 @@
     <div class="row">
                  <%-- REMINDER: To use the attribute DataKeyNames to get the Delete function of your ListView CRUD to work
                                 The DataKeyNames attribute is set to your PK field--%>
-        <asp:ListView ID="AlbumList" runat="server" DataSourceID="AlbumListODS" InsertItemPosition="LastItem"
+        <asp:ListView ID="AlbumList" runat="server" DataSourceID="AlbumListODS" InsertItemPosition="FirstItem"
              DataKeyNames="AlbumId">
 
             <AlternatingItemTemplate>
-                <tr style="">
+                <tr style="background-color: #FFFFFF; color: #284775;">
                     <td>
-                        <asp:Button runat="server" CommandName="Delete" Text="Delete" ID="DeleteButton"
+                        <asp:Button runat="server" CommandName="Delete" Text="Delete" ID="DeleteButton" 
                             OnClientClick="return confirm('Are you sure you wish to delete this album?')" />
                         <asp:Button runat="server" CommandName="Edit" Text="Edit" ID="EditButton" />
                     </td>
                     <td>
-                        <asp:Label Text='<%# Eval("AlbumId") %>' runat="server" ID="AlbumIdLabel" 
-                            Width="50px"/></td>
+                        <asp:Label Text='<%# Eval("AlbumId") %>' runat="server" ID="AlbumIdLabel" Width="50px" /></td>
                     <td>
                         <asp:Label Text='<%# Eval("Title") %>' runat="server" ID="TitleLabel" /></td>
                     <td>
@@ -42,7 +41,7 @@
                         <asp:DropDownList ID="ArtistList" runat="server" 
                             DataSourceID="ArtistListODS" 
                             DataTextField="DisplayField" 
-                            DataValueField="ValueField" 
+                            DataValueField="ValueField"
                             selectedvalue='<%# Eval("ArtistId") %>'>
                         </asp:DropDownList>
                     </td>
@@ -53,13 +52,13 @@
                 </tr>
             </AlternatingItemTemplate>
             <EditItemTemplate>
-                <tr style="">
+                <tr style="background-color: #999999;">
                     <td>
                         <asp:Button runat="server" CommandName="Update" Text="Update" ID="UpdateButton" />
                         <asp:Button runat="server" CommandName="Cancel" Text="Cancel" ID="CancelButton" />
                     </td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("AlbumId") %>' runat="server" ID="AlbumIdTextBox" /></td>
+                        <asp:TextBox Text='<%# Bind("AlbumId") %>' runat="server" ID="AlbumIdTextBox"  Width="50px"/></td>
                     <td>
                         <asp:TextBox Text='<%# Bind("Title") %>' runat="server" ID="TitleTextBox" /></td>
                     <td>
@@ -67,8 +66,8 @@
                         <asp:DropDownList ID="ArtistList" runat="server" 
                             DataSourceID="ArtistListODS" 
                             DataTextField="DisplayField" 
-                            DataValueField="ValueField" 
-                            selectedvalue='<%# /*Eval*/Bind("ArtistId") %>'>
+                            DataValueField="ValueField"
+                            selectedvalue='<%# Bind("ArtistId") %>'><%--Here it's Bind, not Eval--%>
                         </asp:DropDownList>
                     <td>
                         <asp:TextBox Text='<%# Bind("ReleaseYear") %>' runat="server" ID="ReleaseYearTextBox" /></td>
@@ -77,7 +76,8 @@
                 </tr>
             </EditItemTemplate>
             <EmptyDataTemplate>
-                <table runat="server" style="">
+                <table runat="server" style="background-color: #FFFFFF; border-collapse: collapse; border-color: #999999; 
+                        border-style: none; border-width: 1px;">
                     <tr>
                         <td>No data was returned.</td>
                     </tr>
@@ -90,8 +90,7 @@
                         <asp:Button runat="server" CommandName="Cancel" Text="Clear" ID="CancelButton" />
                     </td>
                     <td>
-                        <asp:TextBox Text='<%# Bind("AlbumId") %>' runat="server" ID="AlbumIdTextBox" 
-                             Width="50px"/></td>
+                        <asp:TextBox Text='<%# Bind("AlbumId") %>' runat="server" ID="AlbumIdTextBox"  Width="50px"/></td>
                     <td>
                         <asp:TextBox Text='<%# Bind("Title") %>' runat="server" ID="TitleTextBox" /></td>
                     <td>
@@ -99,8 +98,8 @@
                         <asp:DropDownList ID="ArtistList" runat="server" 
                             DataSourceID="ArtistListODS" 
                             DataTextField="DisplayField" 
-                            DataValueField="ValueField" 
-                            selectedvalue='<%# /*Eval*/Bind("ArtistId") %>'>
+                            DataValueField="ValueField"
+                            selectedvalue='<%# Bind("ArtistId") %>'><%--Here it's Bind, not Eval--%>
                         </asp:DropDownList>
                     <td>
                         <asp:TextBox Text='<%# Bind("ReleaseYear") %>' runat="server" ID="ReleaseYearTextBox" /></td>
@@ -109,15 +108,14 @@
                 </tr>
             </InsertItemTemplate>
             <ItemTemplate>
-                <tr style="">
+                <tr style="background-color: #E0FFFF; color: #333333;">
                     <td>
                         <asp:Button runat="server" CommandName="Delete" Text="Delete" ID="DeleteButton" 
-                            OnClientClick="return confirm('Are you sure you wish to delete this album?')" />
+                            OnClientClick="return confirm('Are you sure you wish to delete this album?')"/>
                         <asp:Button runat="server" CommandName="Edit" Text="Edit" ID="EditButton" />
                     </td>
                     <td>
-                        <asp:Label Text='<%# Eval("AlbumId") %>' runat="server" ID="AlbumIdLabel" 
-                            Width="50px"/></td>
+                        <asp:Label Text='<%# Eval("AlbumId") %>' runat="server" ID="AlbumIdLabel" Width="50px" /></td>
                     <td>
                         <asp:Label Text='<%# Eval("Title") %>' runat="server" ID="TitleLabel" /></td>
                     <td>
@@ -125,7 +123,7 @@
                         <asp:DropDownList ID="ArtistList" runat="server" 
                             DataSourceID="ArtistListODS" 
                             DataTextField="DisplayField" 
-                            DataValueField="ValueField" 
+                            DataValueField="ValueField"
                             selectedvalue='<%# Eval("ArtistId") %>'>
                         </asp:DropDownList>
                     <td>
@@ -138,8 +136,10 @@
                 <table runat="server">
                     <tr runat="server">
                         <td runat="server">
-                            <table runat="server" id="itemPlaceholderContainer" style="" border="0">
-                                <tr runat="server" style="">
+                            <table runat="server" id="itemPlaceholderContainer" style="background-color: #FFFFFF; 
+                                    border-collapse: collapse; border-color: #999999; border-style: none; border-width: 1px; 
+                                    font-family: Verdana, Arial, Helvetica, sans-serif;" border="1">
+                                <tr runat="server" style="background-color: #E0FFFF; color: #333333;">
                                     <th runat="server"></th>
                                     <th runat="server">AlbumId</th>
                                     <th runat="server">Title</th>
@@ -152,13 +152,14 @@
                         </td>
                     </tr>
                     <tr runat="server">
-                        <td runat="server" style="">
-                            <asp:DataPager runat="server" ID="DataPager1">
+                        <td runat="server" style="text-align: center; background-color: #5D7B9D; 
+                                font-family: Verdana, Arial, Helvetica, sans-serif; color: #FFFFFF">
+                            <asp:DataPager runat="server" ID="DataPager2">
                                 <Fields>
-                                    <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowNextPageButton="False" 
+                                    <asp:NextPreviousPagerField ButtonType="Button" ShowFirstPageButton="True" ShowNextPageButton="False"
                                         ShowPreviousPageButton="False"></asp:NextPreviousPagerField>
                                     <asp:NumericPagerField></asp:NumericPagerField>
-                                    <asp:NextPreviousPagerField ButtonType="Button" ShowLastPageButton="True" ShowNextPageButton="False" 
+                                    <asp:NextPreviousPagerField ButtonType="Button" ShowLastPageButton="True" ShowNextPageButton="False"
                                         ShowPreviousPageButton="False"></asp:NextPreviousPagerField>
                                 </Fields>
                             </asp:DataPager>
@@ -167,15 +168,14 @@
                 </table>
             </LayoutTemplate>
             <SelectedItemTemplate>
-                <tr style="">
+                <tr style="background-color: #E2DED6; font-weight: bold; color: #333333;">
                     <td>
                         <asp:Button runat="server" CommandName="Delete" Text="Delete" ID="DeleteButton" 
-                            OnClientClick="return confirm('Are you sure you wish to delete this album?')" />
+                            OnClientClick="return confirm('Are you sure you wish to delete this album?')"/>
                         <asp:Button runat="server" CommandName="Edit" Text="Edit" ID="EditButton" />
                     </td>
                     <td>
-                        <asp:Label Text='<%# Eval("AlbumId") %>' runat="server" ID="AlbumIdLabel" 
-                            Width="50px"/></td>
+                        <asp:Label Text='<%# Eval("AlbumId") %>' runat="server" ID="AlbumIdLabel" Width="50px" /></td>
                     <td>
                         <asp:Label Text='<%# Eval("Title") %>' runat="server" ID="TitleLabel" /></td>
                     <td>
@@ -183,7 +183,7 @@
                         <asp:DropDownList ID="ArtistList" runat="server" 
                             DataSourceID="ArtistListODS" 
                             DataTextField="DisplayField" 
-                            DataValueField="ValueField" 
+                            DataValueField="ValueField"
                             selectedvalue='<%# Eval("ArtistId") %>'>
                         </asp:DropDownList>
                     <td>
