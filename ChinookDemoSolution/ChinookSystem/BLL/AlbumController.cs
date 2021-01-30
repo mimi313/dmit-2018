@@ -37,6 +37,25 @@ namespace ChinookSystem.BLL
         }
 
         [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public List<AlbumDecades> Albums_ListAlbumsByDecade()
+        {
+            using (var context = new ChinookSystemContext())
+            {
+                IEnumerable<AlbumDecades> results = from x in context.Albums
+                                                    orderby x.Title
+                                                    select new AlbumDecades
+                                                    {
+                                                        Title = x.Title,
+                                                        Year = x.ReleaseYear,
+                                                        Decade = x.ReleaseYear >= 1990 && x.ReleaseYear < 2000 ? "90's" :
+                                                                        x.ReleaseYear >= 1980 && x.ReleaseYear < 1990 ? "80's" :
+                                                                        x.ReleaseYear >= 1970 && x.ReleaseYear < 1980 ? "70's" : "Other"
+                                                    };
+                return results.ToList();
+            }
+        }
+
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
         public List<ArtistAlbums> Albums_GetAlbumsForArtist(int artistid)
         {
             using (var context = new ChinookSystemContext())
