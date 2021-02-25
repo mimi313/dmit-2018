@@ -109,6 +109,28 @@ namespace ChinookSystem.BLL
                 return results;
             }
         }
+
+        [DataObjectMethod(DataObjectMethodType.Select, false)]
+        public List<TrackAlbums> Album_FindAlbumsWithOver25Songs()
+        {
+            using (var context = new ChinookSystemContext())
+            {
+                var results = from x in context.Albums
+                                      where x.Tracks.Count() >= 25
+                                      select new TrackAlbums
+                                      {
+                                          Title = x.Title,
+                                          Artist = x.Artist.Name,
+                                          Songs = (from y in x.Tracks
+                                                   select new TrackDetails
+                                                   {
+                                                       Name = y.Name,
+                                                       Length = y.Milliseconds / 1000.0
+                                                   }).ToList()
+                                      };
+                return results.ToList();
+            }
+        }
         #endregion
 
         #region Add, Update, Delete (CRUD)
