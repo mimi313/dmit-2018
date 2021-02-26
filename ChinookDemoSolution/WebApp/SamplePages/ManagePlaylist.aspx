@@ -47,7 +47,8 @@
     <div class="col-sm-9">
         <asp:Label ID="Label5" runat="server" Text="Tracks"></asp:Label>&nbsp;&nbsp;
         <asp:Label ID="TracksBy" runat="server" ></asp:Label>&nbsp;&nbsp;
-        <asp:Label ID="SearchArg" runat="server" ></asp:Label><br />
+        <%--<asp:Label ID="SearchArg" runat="server" ></asp:Label>--%>
+        <asp:HiddenField ID="SearchArg" runat="server" /><br />
         <asp:ListView ID="TracksSelectionList" runat="server"
             DataSourceID="TrackSelectionListODS"
             OnItemCommand="TracksSelectionList_ItemCommand"
@@ -163,7 +164,7 @@
         </asp:LinkButton>&nbsp;&nbsp;
         <asp:LinkButton ID="MoveDown" runat="server"
                 CssClass="btn" OnClick="MoveDown_Click" >
-            <i class="fa fa-chevron-up" style="color:blue; font-size:2em;"></i>&nbsp;
+            <i class="fa fa-chevron-down" style="color:blue; font-size:2em;"></i>&nbsp;
         </asp:LinkButton>&nbsp;&nbsp;
         <asp:LinkButton ID="DeleteTrack" runat="server"
                 CssClass="btn" OnClick="DeleteTrack_Click"  >
@@ -221,16 +222,19 @@
     <asp:ObjectDataSource ID="GenreDDLODS" runat="server" 
         OldValuesParameterFormatString="original_{0}" 
         SelectMethod="List_GenreNames" 
+        OnSelected="SelectCheckForException"
         TypeName="ChinookSystem.BLL.GenreController">
     </asp:ObjectDataSource>
-   
+
+
     <asp:ObjectDataSource ID="TrackSelectionListODS" runat="server" 
         OldValuesParameterFormatString="original_{0}" 
         SelectMethod="List_TracksForPlaylistSelection" 
-        TypeName="ChinookSystem.BLL.TrackController" >
+        OnSelected="SelectCheckForException"
+        TypeName="ChinookSystem.BLL.TrackController">
         <SelectParameters>
-            <asp:ControlParameter ControlID="TracksBy" PropertyName="Text" Name="tracksby" Type="String"></asp:ControlParameter>
-            <asp:ControlParameter ControlID="SearchArg" PropertyName="Text" Name="arg" Type="String"></asp:ControlParameter>
+            <asp:ControlParameter ControlID="TracksBy" PropertyName="Text" DefaultValue="kheta" Name="tracksby" Type="String"></asp:ControlParameter>
+            <asp:ControlParameter ControlID="SearchArg" PropertyName="Value" DefaultValue="lkeja[ot" Name="arg" Type="String"></asp:ControlParameter>
         </SelectParameters>
     </asp:ObjectDataSource>
 
