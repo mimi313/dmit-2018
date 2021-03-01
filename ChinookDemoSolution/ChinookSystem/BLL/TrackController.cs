@@ -52,22 +52,84 @@ namespace ChinookSystem.BLL
         {
             using (var context = new ChinookSystemContext())
             {
+                //List<TrackList> results = (from x in context.Tracks
+                //                          where (x.Album.Artist.Name.Contains(arg) && tracksby.Equals("Artist")) ||
+                //                                (x.Album.Title.Contains(arg) && tracksby.Equals("Album")) ||
+                //                                (x.Genre.Name.Equals(arg) && tracksby.Equals("Genre"))
+                //                           orderby x.Name
+                //                          select new TrackList
+                //                          {
+                //                              TrackID = x.TrackId,
+                //                              Name = x.Name,
+                //                              Title = x.Album.Title,
+                //                              ArtistName = x.Album.Artist.Name,
+                //                              GenreName = x.Genre.Name,
+                //                              Composer = x.Composer,
+                //                              Milliseconds = x.Milliseconds,
+                //                              Bytes = x.Bytes,
+                //                              UnitPrice = x.UnitPrice
+                //                          }).ToList();
+
+
+                //If your Genre value was an integer
+                //List<TrackList> results = null;
+                //int genreid = 0;
+                //if (int.TryParse(arg, out genreid))
+                //{
+                //    results = (from x in context.Tracks
+                //               where (x.GenreId == genreid && tracksby.Equals("Genre")) 
+                //               orderby x.Name
+                //               select new TrackList
+                //               {
+                //                   TrackID = x.TrackId,
+                //                   Name = x.Name,
+                //                   Title = x.Album.Title,
+                //                   ArtistName = x.Album.Artist.Name,
+                //                   GenreName = x.Genre.Name,
+                //                   Composer = x.Composer,
+                //                   Milliseconds = x.Milliseconds,
+                //                   Bytes = x.Bytes,
+                //                   UnitPrice = x.UnitPrice
+                //               }).ToList();
+                //}
+                //else
+                //{
+                //    results = (from x in context.Tracks
+                //               where (x.Album.Artist.Name.Contains(arg) && tracksby.Equals("Artist")) ||
+                //                     (x.Album.Title.Contains(arg) && tracksby.Equals("Album"))
+                //               orderby x.Name
+                //               select new TrackList
+                //               {
+                //                   TrackID = x.TrackId,
+                //                   Name = x.Name,
+                //                   Title = x.Album.Title,
+                //                   ArtistName = x.Album.Artist.Name,
+                //                   GenreName = x.Genre.Name,
+                //                   Composer = x.Composer,
+                //                   Milliseconds = x.Milliseconds,
+                //                   Bytes = x.Bytes,
+                //                   UnitPrice = x.UnitPrice
+                //               }).ToList();
+                //}
+
                 List<TrackList> results = (from x in context.Tracks
-                                          where (x.Album.Artist.Name.Contains(arg) && tracksby.Equals("Artist")) ||
-                                                (x.Album.Title.Contains(arg) && tracksby.Equals("Album"))
+                                           where (x.Album.Artist.Name.Contains(arg) && tracksby.Equals("Artist")) ||
+                                                 (x.Album.Title.Contains(arg) && tracksby.Equals("Album")) ||
+                                                 (x.GenreId.ToString().Equals(arg) && tracksby.Equals("Genre"))
                                            orderby x.Name
-                                          select new TrackList
-                                          {
-                                              TrackID = x.TrackId,
-                                              Name = x.Name,
-                                              Title = x.Album.Title,
-                                              ArtistName = x.Album.Artist.Name,
-                                              GenreName = x.Genre.Name,
-                                              Composer = x.Composer,
-                                              Milliseconds = x.Milliseconds,
-                                              Bytes = x.Bytes,
-                                              UnitPrice = x.UnitPrice
-                                          }).ToList();
+                                           select new TrackList
+                                           {
+                                               TrackID = x.TrackId,
+                                               Name = x.Name,
+                                               Title = x.Album.Title,
+                                               ArtistName = x.Album.Artist.Name,
+                                               GenreName = x.Genre.Name,
+                                               Composer = x.Composer,
+                                               Milliseconds = x.Milliseconds,
+                                               Bytes = x.Bytes,
+                                               UnitPrice = x.UnitPrice
+                                           }).ToList();
+
 
 
                 return results;

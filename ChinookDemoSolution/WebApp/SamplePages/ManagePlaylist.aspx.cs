@@ -79,8 +79,13 @@ namespace WebApp.SamplePages
 
         protected void GenreFetch_Click(object sender, EventArgs e)
         {
+            TracksBy.Text = "Genre";
 
-                //code to go here
+            //There is no prompt test needed as the DDL doesn't have a prompt line
+            //SearchArg.Value = GenreDDL.SelectedValue.ToString(); //As an integer
+            SearchArg.Value = GenreDDL.SelectedItem.Text; //As a string. Keep in mind that all strings have to be unique
+
+            TracksSelectionList.DataBind();
 
         }
 
@@ -99,8 +104,34 @@ namespace WebApp.SamplePages
 
         protected void PlayListFetch_Click(object sender, EventArgs e)
         {
-            //code to go here
- 
+            //username is coming from the system via security
+            //Since security has yet to be installed, a default will be setup for the username value
+            string username = "HansenB";
+
+            if (string.IsNullOrEmpty(PlaylistName.Text))
+            {
+                MessageUserControl.ShowInfo("Playlist Search", "No playlist name was supplied.");
+            }
+            else
+            {
+                //Use some user friendly error handling by using MessageUserControl
+
+                //Syntax of TryRun
+
+                //MessageUserControl.TryRun(() => {
+                //  coding block
+                //},"optional message title","optional success message");
+
+                MessageUserControl.TryRun(() =>
+                {
+                    //Code to execute under error handling control of MessageUserControl
+                    PlaylistTracksController sysmgr = new PlaylistTracksController();
+                    List<UserPlaylistTrack> info = sysmgr.List_TracksForPlaylist(PlaylistName.Text, username);
+                    PlayList.DataSource = info;
+                    PlayList.DataBind();
+                },"Playlist Search","View the requested playlist below");
+            }
+
         }
 
         protected void MoveDown_Click(object sender, EventArgs e)
