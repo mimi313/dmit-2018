@@ -82,8 +82,8 @@ namespace WebApp.SamplePages
             TracksBy.Text = "Genre";
 
             //There is no prompt test needed as the DDL doesn't have a prompt line
-            //SearchArg.Value = GenreDDL.SelectedValue.ToString(); //As an integer
-            SearchArg.Value = GenreDDL.SelectedItem.Text; //As a string. Keep in mind that all strings have to be unique
+            SearchArg.Value = GenreDDL.SelectedValue.ToString(); //As an integer
+            ///SearchArg.Value = GenreDDL.SelectedItem.Text; //As a string. Keep in mind that all strings have to be unique
 
             TracksSelectionList.DataBind();
 
