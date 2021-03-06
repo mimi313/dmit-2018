@@ -9,12 +9,16 @@ using ChinookSystem.Entities;
 using ChinookSystem.ViewModels;
 using ChinookSystem.DAL;
 using System.ComponentModel;
+using FreeCode.Exceptions;
 #endregion
 
 namespace ChinookSystem.BLL
 {
     public class PlaylistTracksController
     {
+        //Class level variable that will hold multiple strings representing any number of error messages
+        List<Exception> brokenRules = new List<Exception>();
+
         public List<UserPlaylistTrack> List_TracksForPlaylist(
             string playlistname, string username)
         {
@@ -38,11 +42,82 @@ namespace ChinookSystem.BLL
         }//eom
         public void Add_TrackToPLaylist(string playlistname, string username, int trackid)
         {
+            Playlist playlistExists = null;
+            PlaylistTrack playlisttrackExists = null;
+            int tracknumber = 0;
+
             using (var context = new ChinookSystemContext())
             {
-                //code to go here
-                
-             
+                //This class is in what is called the Business Logic Layer
+                //Business Logic is the rules of your business
+                // Rule: a track can only exist once on a playlist
+                // Rule: each track on a playlist is assigned a continous track number
+
+                //The BLL method should also ensure that data exists for the processing of the transaction
+                if (string.IsNullOrEmpty(playlistname))
+                {
+                    //There is a data error
+                    //Setting up an error message
+                    brokenRules.Add(new BusinessRuleException<string>("Playlist name is missing. Unable to add track.", nameof(playlistname), 
+                        playlistname));
+                }
+                else if(string.IsNullOrEmpty(username))
+                {
+                    brokenRules.Add(new BusinessRuleException<string>("User name was not supplied.", nameof(username),
+                        username));
+                }
+                else
+                {
+                    //Does the playlist exist?
+                    playlistExists = (from x in context.Playlists
+                                      where (x.Name.Equals(playlistname) && x.UserName.Equals(username))
+                                      select x).FirstOrDefault();
+
+                    if (playlistExists == null)
+                    {
+                        //The playlist does not exist
+                        //Tasks:
+                        //      Create a new instance of a playlist object
+                        //      Load the instance with data
+                        //      Stage the add of the new instance (at this moment, the instance isn't on the database)
+                        //      Set a variable representing the tracknumber to 1
+                        playlistExists = new Playlist()
+                                        {
+                                            //Instance initializer
+                                            Name = playlistname,
+                                            UserName = username
+                                        };
+                        context.Playlists.Add(playlistExists);
+                        tracknumber = 1;
+                    }
+                    else
+                    {
+                        //The playlist already exists
+                        //Verify track not already on playlist
+                        //What is the next tracknumber
+                        //Add 1 to the tracknumber
+                        playlisttrackExists = (from x in context.PlaylistTracks
+                                               where x.Playlist.Name.Equals(playlistname) && x.Playlist.UserName.Equals(username)
+                                                    && x.TrackId == trackid
+                                               select x).FirstOrDefault();
+                        if (playlisttrackExists == null)
+                        {
+                            tracknumber = (from x in context.PlaylistTracks
+                                           where x.Playlist.Name.Equals(playlistname) && x.Playlist.UserName.Equals(username)
+                                           select x.TrackNumber).Max();
+                            tracknumber++;
+                        }
+                        else
+                        {
+                            brokenRules.Add(new BusinessRuleException<string>("Track already on playlist.", nameof(playlisttrackExists.Track.Name),
+                        playlisttrackExists.Track.Name));
+                        }
+                    }
+
+                    //Create/load/stage the adding of the track
+
+                }
+
             }
         }//eom
         public void MoveTrack(string username, string playlistname, int trackid, int tracknumber, string direction)

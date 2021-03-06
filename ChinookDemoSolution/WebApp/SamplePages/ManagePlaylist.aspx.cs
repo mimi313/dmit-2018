@@ -126,12 +126,17 @@ namespace WebApp.SamplePages
                 {
                     //Code to execute under error handling control of MessageUserControl
                     PlaylistTracksController sysmgr = new PlaylistTracksController();
-                    List<UserPlaylistTrack> info = sysmgr.List_TracksForPlaylist(PlaylistName.Text, username);
-                    PlayList.DataSource = info;
-                    PlayList.DataBind();
+                    RefreshPlaylist(sysmgr, username);
                 },"Playlist Search","View the requested playlist below");
             }
 
+        }
+
+        private void RefreshPlaylist(PlaylistTracksController sysmgr, string username)
+        {
+            List<UserPlaylistTrack> info = sysmgr.List_TracksForPlaylist(PlaylistName.Text, username);
+            PlayList.DataSource = info;
+            PlayList.DataBind();
         }
 
         protected void MoveDown_Click(object sender, EventArgs e)
@@ -162,8 +167,23 @@ namespace WebApp.SamplePages
         protected void TracksSelectionList_ItemCommand(object sender, 
             ListViewCommandEventArgs e)
         {
-            //code to go here
-            
+            string username = "HansenB";
+
+            //Validate playlist exists
+            if (string.IsNullOrEmpty(PlaylistName.Text))
+            {
+                MessageUserControl.ShowInfo("Missing Data", "Enter a playlist name.");
+            }
+            else
+            {
+                //Reminder: MessageUserControl will do the error handling
+                MessageUserControl.TryRun(() => {
+                    PlaylistTracksController sysmgr = new PlaylistTracksController();
+                    sysmgr.Add_TrackToPLaylist(PlaylistName.Text, username, int.Parse(e.CommandArgument.ToString()));
+
+                    RefreshPlaylist(sysmgr, username);
+                },"Add Track to Playlist","Track has been added to the playlist.");
+            }
         }
 
     }
