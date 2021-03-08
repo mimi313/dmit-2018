@@ -40,7 +40,7 @@ namespace ChinookSystem.BLL
                 return results.ToList();
             }
         }//eom
-        public void Add_TrackToPLaylist(string playlistname, string username, int trackid)
+        public void Add_TrackToPLaylist(string playlistname, string username, int trackid, string song)
         {
             Playlist playlistExists = null;
             PlaylistTrack playlisttrackExists = null;
@@ -66,8 +66,8 @@ namespace ChinookSystem.BLL
                     brokenRules.Add(new BusinessRuleException<string>("User name was not supplied.", nameof(username),
                         username));
                 }
-                else
-                {
+                //else
+                //{
                     //Does the playlist exist?
                     playlistExists = (from x in context.Playlists
                                       where (x.Name.Equals(playlistname) && x.UserName.Equals(username))
@@ -87,7 +87,7 @@ namespace ChinookSystem.BLL
                                             Name = playlistname,
                                             UserName = username
                                         };
-                        context.Playlists.Add(playlistExists);
+                        context.Playlists.Add(playlistExists); //Stage only, not yet added to the db
                         tracknumber = 1;
                     }
                     else
@@ -109,14 +109,52 @@ namespace ChinookSystem.BLL
                         }
                         else
                         {
-                            brokenRules.Add(new BusinessRuleException<string>("Track already on playlist.", nameof(playlisttrackExists.Track.Name),
-                        playlisttrackExists.Track.Name));
+                            brokenRules.Add(new BusinessRuleException<string>("Track already on playlist.", nameof(song),
+                                            song));
                         }
                     }
 
-                    //Create/load/stage the adding of the track
+                    //Create the playlist track
+                    playlisttrackExists = new PlaylistTrack();
 
-                }
+                    //Load of the plalist track
+                    playlisttrackExists.TrackId = trackid;
+                    playlisttrackExists.TrackNumber = tracknumber;
+
+                    //What is the playlistid?
+                    //If the playlist exists, then we know the id
+                    //But if the playlist is new, we don't know the id. Better said, we don't have an id for the new playlist yet
+
+                    //In the first case the id is known but in the second case, the new record is only staged,
+                    //no PK value has been generated yet
+                    //If you access the nwe playlist record, the PK would be 0 (default numeric)
+
+                    //The solution to both of these scenarios is to use navigational properties during the actual .Add command
+                    //for the new playlisttrack record
+                    //The entity framework will, on your beharlf, ensure that the adding of records to the database will be done 
+                    //in the appropriate order and will add the missing compound PK value (PlaylistId) to the new playlisttrack record
+
+                    //Not like this. This is wrong
+                    //context.PlaylistTracks.Add(playlisttrackExists);
+
+                    //Instead, do the staging using the parent.navproperty.Add(xxx);
+                    playlistExists.PlaylistTracks.Add(playlisttrackExists);
+
+                    //Time to commit to SQL
+                    //Check: Are there any errors in this transaction?
+                    //brokenRules is a List<Exceptions>
+                    if(brokenRules.Count() > 0)
+                    {
+                        //At least one error was recorded during the processing of the transaction
+                        throw new BusinessRuleCollectionException("Add Playlist Track Concerens: ", brokenRules);
+                    }
+                    else
+                    {
+                        //Commit the transaction
+                        //The ALL the staged records to SQL for processing
+                        context.SaveChanges();
+                    }
+                //}
 
             }
         }//eom
