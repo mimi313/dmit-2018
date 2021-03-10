@@ -158,7 +158,7 @@ namespace ChinookSystem.BLL
 
             }
         }//eom
-        public void MoveTrack(string username, string playlistname, int trackid, int tracknumber, string direction)
+        public void MoveTrack(MoveTrackItem moveTrack)
         {
             using (var context = new ChinookSystemContext())
             {
@@ -172,8 +172,78 @@ namespace ChinookSystem.BLL
         {
             using (var context = new ChinookSystemContext())
             {
-               //code to go here
+                if (string.IsNullOrEmpty(playlistname))
+                {
+                    //There is a data error
+                    //Setting up an error message
+                    brokenRules.Add(new BusinessRuleException<string>("Playlist name is missing. Unable to add track.", nameof(playlistname),
+                        playlistname));
+                }
+                if (string.IsNullOrEmpty(username))
+                {
+                    brokenRules.Add(new BusinessRuleException<string>("User name was not supplied.", nameof(username),
+                        username));
+                }
+                if (trackstodelete.Count == 0)
+                {
+                    brokenRules.Add(new BusinessRuleException<int>("You did not select any tracks to delete", "track count", 0));
+                }
+                Playlist exists = (from x in context.Playlists
+                                   where x.Name.Equals(playlistname) && x.UserName.Equals(username)
+                                   select x).FirstOrDefault();
+                if (exists == null)
+                {
+                    brokenRules.Add(new BusinessRuleException<string>("Playlist does not exist", nameof(playlistname), playlistname));
+                }
+                else
+                {
+                    //List of all tracks that are to be kept
+                    var trackskept = context.PlaylistTracks.Where(tr => tr.Playlist.Name.Equals(playlistname) 
+                                                                    && tr.Playlist.UserName.Equals(username)
+                                                                    && !trackstodelete.Any(tod => tod == tr.TrackId))//Not a tracks to delete
+                                            .OrderBy(tr => tr.TrackNumber).Select(tr => tr);
 
+                    //Removed the desired tracks
+                    PlaylistTrack item = null;
+                    foreach (int deletetrackid in trackstodelete)
+                    {
+                        item = context.PlaylistTracks.Where(tr => tr.Playlist.Name.Equals(playlistname)
+                                                                    && tr.Playlist.UserName.Equals(username)
+                                                                    && tr.TrackId == deletetrackid)
+                                            .Select(tr => tr).FirstOrDefault();
+                        if (item != null)
+                        {
+                            //Staged
+                            //Pagent.navproperty.Remove(xxx);
+                            exists.PlaylistTracks.Remove(item);
+                        }
+                    }
+
+                    //Re-sequence (re-number) the kept tracks
+                    //Option a) use a list and update the records of the list
+                    //Option b) delete all children records and re-add only the necessary kept records
+
+                    //Within this example, you will see how to update specific column(s) of a record (Option a)
+
+                    int tracknumber = 1;
+                    foreach (var track in trackskept)
+                    {
+                        track.TrackNumber = tracknumber;
+                        context.Entry(track).Property(nameof(PlaylistTrack.TrackNumber)).IsModified = true; //Staged
+                        //for the current instance, go to the property tracknumber and flag it as changed
+                        tracknumber++;
+                    }
+
+                    //Save the wrok
+                    if (brokenRules.Count > 0)
+                    {
+                        throw new BusinessRuleCollectionException("Track Removal Concerns: ", brokenRules);
+                    }
+                    else
+                    {
+                        context.SaveChanges();
+                    }
+                }
 
             }
         }//eom
