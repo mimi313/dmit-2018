@@ -168,8 +168,8 @@ namespace WebApp.SamplePages
                         if (songSelected.Checked)
                         {
                             rowsSelected++;
-                            moveTrack.TrackId = int.Parse((PlayList.Rows[i].FindControl("TrackID") as CheckBox).Text);
-                            moveTrack.TrackNumber = int.Parse((PlayList.Rows[i].FindControl("TrackNumber") as CheckBox).Text);
+                            moveTrack.TrackId = int.Parse((PlayList.Rows[i].FindControl("TrackID") as Label).Text);
+                            moveTrack.TrackNumber = int.Parse((PlayList.Rows[i].FindControl("TrackNumber") as Label).Text);
                         }
                     }
                     //Processing rule: Only one row may be moved
@@ -234,8 +234,8 @@ namespace WebApp.SamplePages
                         if (songSelected.Checked)
                         {
                             rowsSelected++;
-                            moveTrack.TrackId = int.Parse((PlayList.Rows[i].FindControl("TrackID") as CheckBox).Text);
-                            moveTrack.TrackNumber = int.Parse((PlayList.Rows[i].FindControl("TrackNumber") as CheckBox).Text);
+                            moveTrack.TrackId = int.Parse((PlayList.Rows[i].FindControl("TrackID") as Label).Text);
+                            moveTrack.TrackNumber = int.Parse((PlayList.Rows[i].FindControl("TrackNumber") as Label).Text);
                         }
                     }
                     //Processing rule: Only one row may be moved
