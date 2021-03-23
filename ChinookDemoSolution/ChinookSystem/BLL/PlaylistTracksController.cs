@@ -19,8 +19,7 @@ namespace ChinookSystem.BLL
         //Class level variable that will hold multiple strings representing any number of error messages
         List<Exception> brokenRules = new List<Exception>();
 
-        public List<UserPlaylistTrack> List_TracksForPlaylist(
-            string playlistname, string username)
+        public List<UserPlaylistTrack> List_TracksForPlaylist(string playlistname, string username)
         {
             using (var context = new ChinookSystemContext())
             {
